@@ -1,8 +1,8 @@
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { Task } from '@/types';
-import { Head, router } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { toast } from 'sonner';
 
 export default function Index({ tasks }: { tasks: Task[] }) {
@@ -15,8 +15,11 @@ export default function Index({ tasks }: { tasks: Task[] }) {
     return (
         <AppLayout>
             <Head title="Tasks List" />
-            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <Table className={'mt-4'}>
+            <div className="p-4">
+                <Link className={buttonVariants({ variant: 'outline' })} href="/tasks/create">
+                    Create Task
+                </Link>
+                <Table className={'mt-4 rounded-xl border'}>
                     <TableHeader>
                         <TableRow>
                             <TableHead>Task</TableHead>
