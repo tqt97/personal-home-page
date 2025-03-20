@@ -2,32 +2,35 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem, type Task } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useRef } from 'react';
-
-type CreateTaskForm = {
-    name?: string;
-};
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Tasks', href: '/tasks' },
-    { title: 'Create', href: '/tasks' },
+    { title: 'Edit', href: '' },
 ];
 
-export default function Create() {
+type EditTaskForm = {
+    name: string;
+    is_completed: boolean;
+};
+
+export default function Edit({ task }: { task: Task }) {
     const taskName = useRef<HTMLInputElement>(null);
-    const { data, setData, errors, post, reset, processing } = useForm<Required<CreateTaskForm>>({
-        name: '',
+
+    const { data, setData, errors, put, reset, processing } = useForm<Required<EditTaskForm>>({
+        name: task.name,
+        is_completed: task.is_completed,
     });
 
-    const createTask: FormEventHandler = (e) => {
+    const editTask: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(route('tasks.store'), {
-            forceFormData: true,
+        put(route('tasks.update', task.id), {
             preserveScroll: true,
             onSuccess: () => {
                 reset();
@@ -40,14 +43,13 @@ export default function Create() {
             },
         });
     };
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Create Task" />
-            <div className="border p-4">
-                <form onSubmit={createTask} className="space-y-6">
+            <Head title="Edit Task" />
+            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
+                <form onSubmit={editTask} className="space-y-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="name">Task Name *</Label>
+                        <Label htmlFor="name">Task Name</Label>
 
                         <Input
                             id="name"
@@ -59,9 +61,17 @@ export default function Create() {
 
                         <InputError message={errors.name} />
                     </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="is_completed">Completed?</Label>
+
+                        {/* <Checkbox checked={data.is_completed} onCheckedChange={() => setData('is_completed', !data.is_completed)} /> */}
+                        <Switch checked={data.is_completed} onCheckedChange={() => setData('is_completed', !data.is_completed)} />
+
+                        <InputError message={errors.is_completed} />
+                    </div>
 
                     <div className="flex items-center gap-4">
-                        <Button disabled={processing}>Create Task</Button>
+                        <Button disabled={processing}>Update Task</Button>
                     </div>
                 </form>
             </div>

@@ -1,9 +1,15 @@
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { Task } from '@/types';
+import { type BreadcrumbItem, type Task } from '@/types';
+
 import { Head, Link, router } from '@inertiajs/react';
 import { toast } from 'sonner';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Dashboard', href: '/dashboard' },
+    { title: 'Tasks', href: '/tasks' },
+];
 
 export default function Index({ tasks }: { tasks: Task[] }) {
     const deleteTask = (task: Task) => {
@@ -13,7 +19,7 @@ export default function Index({ tasks }: { tasks: Task[] }) {
         }
     };
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Tasks List" />
             <div className="p-4">
                 <Link className={buttonVariants({ variant: 'outline' })} href="/tasks/create">
@@ -35,6 +41,9 @@ export default function Index({ tasks }: { tasks: Task[] }) {
                                     {task.is_completed ? 'Completed' : 'In Progress'}
                                 </TableCell>
                                 <TableCell className="flex flex-row gap-x-2 text-right">
+                                    <Link className={buttonVariants({ variant: 'default' })} href={`/tasks/${task.id}/edit`}>
+                                        Edit
+                                    </Link>
                                     <Button variant={'destructive'} className={'cursor-pointer'} onClick={() => deleteTask(task)}>
                                         Delete
                                     </Button>
