@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Task;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\User;
@@ -24,5 +25,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Task::factory()->count(100)->create();
+        Category::factory()->count(10)->create();
     }
 }

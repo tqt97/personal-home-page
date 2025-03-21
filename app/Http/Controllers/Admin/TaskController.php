@@ -22,7 +22,7 @@ class TaskController extends Controller
                 ->with(['media', 'categories'])
                 ->when($request->has('categories'), function ($query) use ($request) {
                     $query->whereHas('categories', function ($query) use ($request) {
-                        $query->whereIn('id', $request->query('categories'));
+                        $query->whereIn('categories.id', $request->query('categories'));
                     });
                 })
                 ->orderBy('created_at', 'desc')
@@ -37,7 +37,6 @@ class TaskController extends Controller
      */
     public function create()
     {
-
         return Inertia::render('Tasks/Create', [
             'categories' => Category::all(),
         ]);
