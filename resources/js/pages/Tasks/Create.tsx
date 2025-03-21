@@ -2,8 +2,9 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem, type Category } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { format } from 'date-fns';
 import { FormEventHandler, useRef } from 'react';
@@ -12,6 +13,7 @@ type CreateTaskForm = {
     name?: string;
     due_date?: string;
     media?: string;
+    categories?: string[];
 };
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -20,12 +22,13 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Create', href: '/tasks' },
 ];
 
-export default function Create() {
+export default function Create({ categories }: { categories: Category[] }) {
     const taskName = useRef<HTMLInputElement>(null);
     const { data, setData, errors, post, reset, processing, progress } = useForm<Required<CreateTaskForm>>({
         name: '',
         due_date: '',
         media: '',
+        categories: [],
     });
 
     const createTask: FormEventHandler = (e) => {
@@ -66,7 +69,7 @@ export default function Create() {
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="name">Due Date</Label>
+                        <Label htmlFor="due_date">Due Date</Label>
 
                         <Input
                             id="due_date"
@@ -75,6 +78,27 @@ export default function Create() {
                             className="mt-1 block w-full"
                             type="date"
                         />
+
+                        <InputError message={errors.due_date} />
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="categories">Categories</Label>
+
+                        <ToggleGroup
+                            id="categories"
+                            type="multiple"
+                            variant={'outline'}
+                            size={'lg'}
+                            value={data.categories}
+                            onValueChange={(value) => setData('categories', value)}
+                        >
+                            {categories.map((category) => (
+                                <ToggleGroupItem key={category.id} value={category.id.toString()}>
+                                    {category.name}
+                                </ToggleGroupItem>
+                            ))}
+                        </ToggleGroup>
 
                         <InputError message={errors.due_date} />
                     </div>

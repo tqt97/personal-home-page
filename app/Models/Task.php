@@ -19,6 +19,7 @@ class Task extends Model implements HasMedia
         'name',
         'is_completed',
         'due_date',
+        'categories',
     ];
 
     protected function casts(): array

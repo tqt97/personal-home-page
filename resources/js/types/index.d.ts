@@ -47,6 +47,7 @@ export interface Task {
     is_completed: boolean;
     due_date?: string;
     mediaFile?: MediaFile;
+    categories: Category[];
     created_at: string;
     updated_at: string;
 }

@@ -3,9 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem, type Task } from '@/types';
-// import { Head, useForm } from '@inertiajs/react';
+import { type BreadcrumbItem, type Category, type Task } from '@/types';
 import { Head, router, useForm } from '@inertiajs/react';
 
 import { format } from 'date-fns';
@@ -22,9 +22,10 @@ type EditTaskForm = {
     is_completed: boolean;
     due_date: string;
     media?: string;
+    categories: string[];
 };
 
-export default function Edit({ task }: { task: Task }) {
+export default function Edit({ task, categories }: { task: Task; categories: Category[] }) {
     const taskName = useRef<HTMLInputElement>(null);
 
     const { data, setData, errors, reset, processing, progress } = useForm<EditTaskForm>({
@@ -32,24 +33,9 @@ export default function Edit({ task }: { task: Task }) {
         is_completed: task.is_completed,
         due_date: task.due_date ?? '',
         media: '',
+        categories: task.categories.map((category) => category.id.toString()),
     });
 
-    // const editTask: FormEventHandler = (e) => {
-    //     e.preventDefault();
-
-    //     put(route('tasks.update', task.id), {
-    //         preserveScroll: true,
-    //         onSuccess: () => {
-    //             reset();
-    //         },
-    //         onError: (errors) => {
-    //             if (errors.name) {
-    //                 reset('name');
-    //                 taskName.current?.focus();
-    //             }
-    //         },
-    //     });
-    // };
     const editTask: FormEventHandler = (e) => {
         e.preventDefault();
 
@@ -100,7 +86,7 @@ export default function Edit({ task }: { task: Task }) {
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="name">Due Date</Label>
+                        <Label htmlFor="due_date">Due Date</Label>
 
                         <Input
                             id="due_date"
@@ -109,6 +95,27 @@ export default function Edit({ task }: { task: Task }) {
                             className="mt-1 block w-full"
                             type="date"
                         />
+
+                        <InputError message={errors.due_date} />
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="categories">Categories</Label>
+
+                        <ToggleGroup
+                            id="categories"
+                            type="multiple"
+                            variant={'outline'}
+                            size={'lg'}
+                            value={data.categories}
+                            onValueChange={(value) => setData('categories', value)}
+                        >
+                            {categories.map((category) => (
+                                <ToggleGroupItem key={category.id} value={category.id.toString()}>
+                                    {category.name}
+                                </ToggleGroupItem>
+                            ))}
+                        </ToggleGroup>
 
                         <InputError message={errors.due_date} />
                     </div>
