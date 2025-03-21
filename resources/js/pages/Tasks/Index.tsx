@@ -23,9 +23,17 @@ export default function Index({ tasks }: { tasks: PaginatedResponse<Task> }) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Tasks List" />
             <div className="p-4">
-                <Link className={buttonVariants({ variant: 'outline' })} href="/tasks/create">
+                {/* <Link className={buttonVariants({ variant: 'outline' })} href="/tasks/create">
                     Create Task
-                </Link>
+                </Link> */}
+                <div className={'flex flex-row gap-x-4'}>
+                    <Link className={buttonVariants({ variant: 'default' })} href="/tasks/create">
+                        Create Task
+                    </Link>
+                    <Link className={buttonVariants({ variant: 'outline' })} href="/categories">
+                        Manage Task Categories
+                    </Link>
+                </div>
                 <Table className={'mt-4 rounded-xl border'}>
                     <TableHeader>
                         <TableRow>

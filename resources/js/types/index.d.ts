@@ -51,7 +51,7 @@ export interface Task {
     updated_at: string;
 }
 
-export interface PaginatedResponse<T = Task | null> {
+export interface PaginatedResponse<T = Task | Category | null> {
     current_page: number;
     data: T[];
     first_page_url: string;
@@ -92,4 +92,13 @@ export interface MediaFile {
     updated_at: string;
     original_url: string;
     preview_url: string;
+}
+
+export interface Category {
+    id: number;
+    name: string;
+    tasks_count: number | null;
+    tasks: Task[] | null;
+    created_at: string;
+    updated_at: string;
 }
