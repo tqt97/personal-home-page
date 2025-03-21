@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem, type PaginatedResponse, type Task } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
+import { format } from 'date-fns';
 import { toast } from 'sonner';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -30,6 +31,7 @@ export default function Index({ tasks }: { tasks: PaginatedResponse<Task> }) {
                         <TableRow>
                             <TableHead>Task</TableHead>
                             <TableHead className="w-[100px]">Status</TableHead>
+                            <TableHead className="w-[100px]">Due Date</TableHead>
                             <TableHead className="w-[150px] text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -40,6 +42,7 @@ export default function Index({ tasks }: { tasks: PaginatedResponse<Task> }) {
                                 <TableCell className={task.is_completed ? 'text-green-600' : 'text-red-700'}>
                                     {task.is_completed ? 'Completed' : 'In Progress'}
                                 </TableCell>
+                                <TableCell>{task.due_date ? format(task.due_date, 'PPP') : ''}</TableCell>
                                 <TableCell className="flex flex-row gap-x-2 text-right">
                                     <Link className={buttonVariants({ variant: 'default' })} href={`/tasks/${task.id}/edit`}>
                                         Edit
