@@ -103,3 +103,25 @@ export interface Category {
     created_at: string;
     updated_at: string;
 }
+
+interface ChartDataset {
+    label: string;
+    backgroundColor: string | string[];
+    data: number[];
+}
+
+interface TaskChartData {
+    labels: string[];
+    datasets: ChartDataset[];
+}
+
+interface ChartDataset {
+    label: string;
+    backgroundColor: string | string[];
+    data: number[];
+}
+
+interface TaskChartData {
+    labels: string[];
+    datasets: ChartDataset[];
+}
