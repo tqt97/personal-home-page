@@ -13,7 +13,7 @@ import { FormEventHandler, useRef } from 'react';
 type CreateTaskForm = {
     name?: string;
     due_date?: string;
-    media?: string;
+    media?: string | File | null;
     categories?: string[];
 };
 
@@ -109,7 +109,19 @@ export default function Create({ categories }: { categories: Category[] }) {
                             <div className="grid gap-2">
                                 <Label htmlFor="media">Media</Label>
 
-                                <Input id="media" onChange={(e) => setData('media', e.target.files[0])} className="mt-1 block w-full" type="file" />
+                                <Input
+                                    id="media"
+                                    onChange={(e) => {
+                                        const files = e.target.files; // get the files
+                                        if (files && files.length > 0) {
+                                            setData('media', files[0]); // get first file
+                                        } else {
+                                            setData('media', null); // if no files, set null
+                                        }
+                                    }}
+                                    className="mt-1 block w-full"
+                                    type="file"
+                                />
 
                                 {progress && (
                                     <progress value={progress.percentage} max="100">
