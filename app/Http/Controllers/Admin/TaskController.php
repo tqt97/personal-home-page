@@ -25,8 +25,9 @@ class TaskController extends Controller
                         $query->whereIn('categories.id', $request->query('categories'));
                     });
                 })
-                ->orderBy('created_at', 'desc')
-                ->paginate(10),
+                ->orderBy('id', 'DESC')
+                ->paginate(10)
+                ->withQueryString(),
             'categories' => Category::whereHas('tasks')->withCount('tasks')->get(),
             'selectedCategories' => $request->query('categories'),
         ]);
@@ -57,7 +58,7 @@ class TaskController extends Controller
             $task->categories()->sync($request->validated('categories'));
         }
 
-        return redirect()->route('tasks.index');
+        return to_route('tasks.index')->with('message', 'Create task successfully');
     }
 
     /**
@@ -99,7 +100,7 @@ class TaskController extends Controller
         }
         // $task->categories()->sync($request->validated('categories', []));
 
-        return redirect()->route('tasks.index');
+        return to_route('tasks.index')->with('message', 'Update task successfully');
     }
 
     /**
@@ -109,6 +110,6 @@ class TaskController extends Controller
     {
         $task->delete();
 
-        return redirect()->route('tasks.index');
+        return to_route('tasks.index');
     }
 }

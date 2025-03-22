@@ -2,8 +2,9 @@ import { TablePagination } from '@/components/table-pagination';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem, type Category, type PaginatedResponse } from '@/types';
-import { Head, Link, router } from '@inertiajs/react';
+import { FlashProp, type BreadcrumbItem, type Category, type PaginatedResponse } from '@/types';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
 import { toast } from 'sonner';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -13,6 +14,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Index({ categories }: { categories: PaginatedResponse<Category> }) {
+    const { flash } = usePage<FlashProp>().props;
     const deleteCategory = (category: Category) => {
         if (category.tasks_count === 0) {
             if (confirm('Are you sure you want to delete this task category?')) {
@@ -31,6 +33,11 @@ export default function Index({ categories }: { categories: PaginatedResponse<Ca
         }
     };
 
+    useEffect(() => {
+        if (flash?.message) {
+            toast.success(flash.message);
+        }
+    }, [flash]);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Category List" />

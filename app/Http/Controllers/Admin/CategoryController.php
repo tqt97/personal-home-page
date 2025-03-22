@@ -15,6 +15,7 @@ class CategoryController extends Controller
         return Inertia::render('Categories/Index', [
             'categories' => Category::query()
                 ->withCount('tasks')
+                ->orderBy('created_at', 'DESC')
                 ->paginate(10),
         ]);
     }
@@ -28,7 +29,7 @@ class CategoryController extends Controller
     {
         Category::create($request->validated());
 
-        return redirect()->route('categories.index');
+        return to_route('categories.index')->with('message', 'Create category successfully');
     }
 
     public function edit(Category $category)
@@ -42,7 +43,7 @@ class CategoryController extends Controller
     {
         $category->update($request->validated());
 
-        return redirect()->route('categories.index');
+        return to_route('categories.index')->with('message', 'Update category successfully');
     }
 
     public function destroy(Category $category)
@@ -53,6 +54,6 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        return redirect()->route('categories.index');
+        return to_route('categories.index');
     }
 }

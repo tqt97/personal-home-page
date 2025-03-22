@@ -125,3 +125,9 @@ interface TaskChartData {
     labels: string[];
     datasets: ChartDataset[];
 }
+
+interface FlashProp extends Record<string, unknown> {
+    flash?: {
+        message?: string;
+    };
+}

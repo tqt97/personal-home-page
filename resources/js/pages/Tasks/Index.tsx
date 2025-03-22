@@ -2,9 +2,10 @@ import { TablePagination } from '@/components/table-pagination';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { Category, type BreadcrumbItem, type PaginatedResponse, type Task } from '@/types';
-import { Head, Link, router } from '@inertiajs/react';
+import { Category, FlashProp, type BreadcrumbItem, type PaginatedResponse, type Task } from '@/types';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { format } from 'date-fns';
+import { useEffect } from 'react';
 import { toast } from 'sonner';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -21,6 +22,8 @@ export default function Index({
     categories: Category[];
     selectedCategories: string[] | null;
 }) {
+    const { flash } = usePage<FlashProp>().props;
+
     const deleteTask = (task: Task) => {
         if (confirm('Are you sure?')) {
             router.delete(route('tasks.destroy', { task }));
@@ -34,6 +37,13 @@ export default function Index({
             : [...(selectedCategories || []), id];
         router.visit('/tasks', { data: { categories: selected } });
     };
+
+    // useEffect() to show flash message
+    useEffect(() => {
+        if (flash?.message) {
+            toast.success(flash.message);
+        }
+    }, [flash]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -50,14 +60,17 @@ export default function Index({
                         Manage Task Categories
                     </Link>
                 </div>
-                <div className={'mt-4 flex flex-row justify-center gap-x-2'}>
+                <div className="mt-4 flex flex-row flex-wrap justify-end gap-x-2">
                     {categories.map((category: Category) => (
                         <Button
+                            className="cursor-pointer"
                             variant={selectedCategories?.includes(category.id.toString()) ? 'default' : 'outline'}
                             key={category.id}
                             onClick={() => selectCategory(category.id.toString())}
                         >
-                            {category.name} ({category.tasks_count})
+                            <span className="text-xs">
+                                {category.name} ({category.tasks_count})
+                            </span>
                         </Button>
                     ))}
                 </div>
